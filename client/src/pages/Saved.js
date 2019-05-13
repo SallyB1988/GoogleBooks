@@ -1,7 +1,15 @@
 import React, { Component } from "react";
-import { Container, Jumbotron, Row } from "react-bootstrap";
-
+import { Container, Row, Col, ListGroup, ListGroupItem } from "react-bootstrap";
 import API from "../utils/API";
+import BookCard from "../components/BookCard";
+import Header from "../components/Header";
+
+const styles = {
+  scrollDiv: {
+    height: 450,
+    overflowY: "auto"
+  }
+};
 
 class Saved extends Component {
   state = {
@@ -16,8 +24,20 @@ class Saved extends Component {
     API.getBooks()
       .then(res =>
         this.setState({
-          books: res.data,
+          books: res.data
         })
+      )
+      .catch(err => console.log(err));
+  };
+
+  handleRemove = (id) => {  
+    console.log('deleting book');
+    console.log(id);
+    API.deleteBook(id)
+      .then(res =>{
+        this.loadBooks();
+        console.log("book deleted");;
+      }
       )
       .catch(err => console.log(err));
   };
@@ -38,12 +58,35 @@ class Saved extends Component {
   render() {
     return (
       <Container fluid>
-        <Jumbotron>
-          <h1>Google Book Search</h1>
-        </Jumbotron>
+        <Header />
+        <Row className="justify-content-md-center">
+          <Col md="8">
+            <h2>SAVED BOOKS</h2>
+            <div style={styles.scrollDiv}>
 
-        <Row>
-          <h3> SAVED PAGE </h3>
+            {this.state.books.length ? (
+              <ListGroup>
+                {this.state.books.map(book => (
+                  <ListGroupItem key={book.id}>
+                    <BookCard
+                      title={book.title}
+                      authors={book.authors}
+                      image={book.image}
+                      description={book.description}
+                      mainButtonLink={book.link}
+                      mainButtonText="view"
+                      secondButtonFunc={() => this.handleRemove(book._id)}
+                      secondButtonText="remove"
+                      disabled={book.saved}
+                      />
+                  </ListGroupItem>
+                ))}
+              </ListGroup>
+            ) : (
+              <h3>No Results to Display</h3>
+              )}
+              </div>
+          </Col>
         </Row>
       </Container>
     );

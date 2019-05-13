@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Container,
-  Jumbotron,
   Row,
   Col,
   ListGroup,
@@ -11,6 +10,14 @@ import {
 import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import BookCard from "../components/BookCard";
+import Header from "../components/Header";
+
+const styles = {
+  scrollDiv: {
+    height: 450,
+    overflowY: "auto"
+  }
+};
 
 class Search extends Component {
   state = {
@@ -18,19 +25,27 @@ class Search extends Component {
   };
 
   componentDidMount() {
-    this.loadBooks();
+    // this.loadBooks();
   }
 
   updateBooks = (books) => {
     this.setState({books: books})
   }
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({
-          books: res.data
+  handleSave = (book) => {  
+    API.saveBook(book)
+      .then(res =>{
+        let booksCopy = this.state.books;
+        booksCopy.map((b) => {
+          if (b.id === book.id) {
+            b.saved=true;
+          }
         })
+        console.log(booksCopy);
+        this.setState({
+          books: booksCopy
+        })
+      }
       )
       .catch(err => console.log(err));
   };
@@ -49,45 +64,39 @@ class Search extends Component {
   };
   
   render() {
-    let authorStr="a bunch of authors"
     return (
       <Container fluid>
-        <Jumbotron>
-          <h1>Google Book Search</h1>
-        </Jumbotron>
+        <Header />
 
-        <Row>
-          <h3> SEARCH PAGE </h3>
-        </Row>
-        <Row>
-
+        <Row className="justify-content-md-center">
+          <Col md="8">
             <SearchForm updateBooks={this.updateBooks} />
-
+            <div style={styles.scrollDiv}>
+            
             {this.state.books.length ? (
               <ListGroup>
                 {this.state.books.map(book => (
-                  // MAKE A STRING OUT OF THE AUTHORS!
-                  
                   <ListGroupItem key={book._id}>
                     <BookCard
                       title={book.title}
-                      authors={authorStr}
+                      authors={book.authors}
                       image={book.image}
                       description={book.description}
-                      mainbuttonfunc={()=>{}}
-                      mainbuttontext="view"  
-                      secondbuttonfunc={()=>{}}
-                      secondbuttontext="save"
+                      mainButtonLink={book.link}
+                      mainButtonText="view"  
+                      secondButtonFunc={()=>this.handleSave(book)}
+                      secondButtonText="save"
+                      disabled={book.saved}
                     />
 
-                    {/* <Button onClick={() => this.deleteBook(book._id)} /> */}
                   </ListGroupItem>
                 ))}
               </ListGroup>
             ) : (
-              <h3>No Results to Display</h3>
-            )}
-
+              <h3 className="text-center">No Results to Display</h3>
+              )}
+              </div>
+          </Col>
         </Row>
       </Container>
     );

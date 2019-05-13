@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Form, Button } from 'react-bootstrap';
 import API from "../../utils/API";
 
+
 class SearchForm extends Component {
   state = {
     title: "",
@@ -29,12 +30,15 @@ class SearchForm extends Component {
             if (b.searchInfo && b.volumeInfo) {
               let authorStr = '';
               b.volumeInfo.authors.forEach((a) => {
-                if (authorStr !== '') {
+                if (authorStr === "") {
                   authorStr = a;
-                }
+                } else {
+
                   authorStr += `, ${a}`;
+                }
               })
               foundBooks.push({
+                "id": b.id,
                 "title": title,
                 "description": b.searchInfo.textSnippet,
                 "authors": authorStr,
@@ -52,6 +56,8 @@ class SearchForm extends Component {
 
   render() {
     return (
+        <div className="p-4 mb-4 border border-primary">
+
       <Form>
         <Form.Group controlId="formTitle">
           <Form.Label>Book Title</Form.Label>
@@ -63,10 +69,12 @@ class SearchForm extends Component {
             value={this.state.title}
           />
         </Form.Group>
-        <Button disabled={!this.state.title} onClick={this.handleSubmit}>
+        <Button onClick={this.handleSubmit}>
           Submit
         </Button>
       </Form>
+
+        </div>
     );
   }
 }
