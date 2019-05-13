@@ -16,5 +16,11 @@ export default {
   // Saves a book to the database
   saveBook: function(bookData) {
     return axios.post("/api/books", bookData);
+  },
+  // Searches for a book by title on google books
+  searchTitle: function(bookTitle) {
+      let urlStr = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}`;
+      console.log(urlStr);
+      return (axios.get(urlStr));
   }
 };

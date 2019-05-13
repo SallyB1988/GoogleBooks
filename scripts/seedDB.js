@@ -14,12 +14,25 @@ const bookSeed = [
       "http://books.google.com/books/content?id=sazytgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
     link:
       "http://books.google.com/books?id=sazytgAACAAJ&dq=title:The+Hunger+Games&hl=&source=gbs_api",
-    title: "The Hunger Games"
+    title: "The Hunger Games",
+    date: new Date(Date.now())
+  },
+  {
+    authors: ["Betty Boop"],
+    description:
+      "A cartoon character takes over the world.",
+    image:
+      "http://books.google.com/books/content?id=sazytgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    link:
+      "http://books.google.com/books?id=sazytgAACAAJ&dq=title:The+Hunger+Games&hl=&source=gbs_api",
+    title: "Betty Book Conquers the World",
+    date: new Date(Date.now())
   }
 ];
 
-db.Book.remove({})
-  .then(() => db.User.collection.insertMany(bookSeed))
+db.Book
+  .remove({})
+  .then(() => db.Book.collection.insertMany(bookSeed))
   .then(data => {
     console.log(data.result.n + " records inserted!");
     process.exit(0);

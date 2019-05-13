@@ -1,15 +1,21 @@
 import React, { Component } from "react";
-import { Container, Jumbotron, Row } from "react-bootstrap";
+import {
+  Container,
+  Jumbotron,
+  Row,
+  Col,
+  ListGroup,
+  ListGroupItem,
+  Button,
+  Image
+} from "react-bootstrap";
 
 import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 
 class Search extends Component {
   state = {
-    books: [],
-    firstName: "",
-    lastName: "",
-    highScore: 0
+    books: []
   };
 
   componentDidMount() {
@@ -20,10 +26,7 @@ class Search extends Component {
     API.getBooks()
       .then(res =>
         this.setState({
-          books: res.data,
-          firstName: "",
-          lastName: "",
-          highScore: 0
+          books: res.data
         })
       )
       .catch(err => console.log(err));
@@ -51,7 +54,29 @@ class Search extends Component {
 
         <Row>
           <h3> SEARCH PAGE </h3>
-          <SearchForm />
+        </Row>
+        <Row>
+          <Col size="md-6 sm-12">
+            <SearchForm />
+          </Col>
+          <Col size="md-6 sm-12">
+            {this.state.books.length ? (
+              <ListGroup>
+                {this.state.books.map(book => (
+                  <ListGroupItem key={book._id}>
+                    <strong>
+                      {book.title} by {book.authors[0]}
+                    </strong>
+                    <Image src={book.image} />
+                    <p>{book.description}</p>
+                    <Button onClick={() => this.deleteBook(book._id)} />
+                  </ListGroupItem>
+                ))}
+              </ListGroup>
+            ) : (
+              <h3>No Results to Display</h3>
+            )}
+          </Col>
         </Row>
       </Container>
     );

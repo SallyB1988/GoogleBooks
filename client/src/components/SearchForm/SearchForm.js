@@ -4,11 +4,14 @@ import API from "../../utils/API";
 
 class SearchForm extends Component {
   state = {
-    title: ""
+    title: "",
+    searchResults: []
   };
 
   handleInputChange = event => {
     const { name, value } = event.target;
+    console.log('name: ' + name);
+    console.log(value);
     this.setState({
       [name]: value
     });
@@ -16,14 +19,27 @@ class SearchForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    if (this.state.firstName && this.state.lastName) {
-      API.saveBook({
-        firstName: this.state.firstName,
-        lastName: this.state.lastName
-      })
-        .then(res => this.loadBooks())
+    let title = this.state.title;
+    let searchtitle = title.replace(/\s+/g,"+");
+    let foundBooks = [];
+      API.searchTitle(searchtitle)
+        .then(res => {
+          let data = res.data.items;
+          data.forEach((b) => {
+            if (b.searchInfo && b.volumeInfo) {
+              foundBooks.push({
+                "title": title,
+                "description": b.searchInfo.textSnippet,
+                "authors": b.volumeInfo.authors,
+                "image": b.volumeInfo.imageLinks.thumbnail,
+                "link": b.volumeInfo.infoLink
+              })
+            }
+          })
+          console.log(foundBooks);
+          this.setState({searchResults:  foundBooks})
+        })
         .catch(err => console.log(err));
-    }
   };
 
   render() {
@@ -32,7 +48,8 @@ class SearchForm extends Component {
         <Form.Group controlId="formTitle">
           <Form.Label>Book Title</Form.Label>
           <Form.Control
-            type="title"
+            type="text"
+            name="title"
             placeholder="Enter title"
             onChange={this.handleInputChange}
             value={this.state.title}
