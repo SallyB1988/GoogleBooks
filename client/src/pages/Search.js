@@ -83,9 +83,9 @@ class Search extends Component {
                       image={book.image}
                       description={book.description}
                       mainButtonLink={book.link}
-                      mainButtonText="view"  
+                      mainButtonText="VIEW"  
                       secondButtonFunc={()=>this.handleSave(book)}
-                      secondButtonText="save"
+                      secondButtonText="SAVE"
                       disabled={book.saved}
                     />
 

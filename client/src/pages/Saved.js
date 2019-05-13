@@ -8,6 +8,10 @@ const styles = {
   scrollDiv: {
     height: 450,
     overflowY: "auto"
+  },
+  titleStr: {
+    backgroundColor: "lightGrey",
+    padding: 10,
   }
 };
 
@@ -61,7 +65,7 @@ class Saved extends Component {
         <Header />
         <Row className="justify-content-md-center">
           <Col md="8">
-            <h2>SAVED BOOKS</h2>
+            <h2 style={styles.titleStr}>SAVED BOOKS</h2>
             <div style={styles.scrollDiv}>
 
             {this.state.books.length ? (
@@ -74,16 +78,16 @@ class Saved extends Component {
                       image={book.image}
                       description={book.description}
                       mainButtonLink={book.link}
-                      mainButtonText="view"
+                      mainButtonText="VIEW"
                       secondButtonFunc={() => this.handleRemove(book._id)}
-                      secondButtonText="remove"
+                      secondButtonText="REMOVE"
                       disabled={book.saved}
                       />
                   </ListGroupItem>
                 ))}
               </ListGroup>
             ) : (
-              <h3>No Results to Display</h3>
+              <h3 className="text-center">No Results to Display</h3>
               )}
               </div>
           </Col>
