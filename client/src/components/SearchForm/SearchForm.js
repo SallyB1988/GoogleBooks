@@ -5,7 +5,7 @@ import API from "../../utils/API";
 class SearchForm extends Component {
   state = {
     title: "",
-    searchResults: []
+    // searchResults: []
   };
 
   handleInputChange = event => {
@@ -27,17 +27,25 @@ class SearchForm extends Component {
           let data = res.data.items;
           data.forEach((b) => {
             if (b.searchInfo && b.volumeInfo) {
+              let authorStr = '';
+              b.volumeInfo.authors.forEach((a) => {
+                if (authorStr !== '') {
+                  authorStr = a;
+                }
+                  authorStr += `, ${a}`;
+              })
               foundBooks.push({
                 "title": title,
                 "description": b.searchInfo.textSnippet,
-                "authors": b.volumeInfo.authors,
+                "authors": authorStr,
                 "image": b.volumeInfo.imageLinks.thumbnail,
                 "link": b.volumeInfo.infoLink
               })
             }
           })
           console.log(foundBooks);
-          this.setState({searchResults:  foundBooks})
+          this.props.updateBooks(foundBooks);
+          // this.setState({searchResults:  foundBooks})
         })
         .catch(err => console.log(err));
   };

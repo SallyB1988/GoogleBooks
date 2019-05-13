@@ -13,6 +13,4 @@ router
   .put(bookssController.update)
   .delete(bookssController.remove);
 
-// Matches with "/"
-
 module.exports = router;

@@ -17,9 +17,6 @@ class Saved extends Component {
       .then(res =>
         this.setState({
           books: res.data,
-          firstName: "",
-          lastName: "",
-          highScore: 0
         })
       )
       .catch(err => console.log(err));

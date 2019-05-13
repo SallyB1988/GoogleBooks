@@ -6,12 +6,11 @@ import {
   Col,
   ListGroup,
   ListGroupItem,
-  Button,
-  Image
 } from "react-bootstrap";
 
 import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
+import BookCard from "../components/BookCard";
 
 class Search extends Component {
   state = {
@@ -20,6 +19,10 @@ class Search extends Component {
 
   componentDidMount() {
     this.loadBooks();
+  }
+
+  updateBooks = (books) => {
+    this.setState({books: books})
   }
 
   loadBooks = () => {
@@ -44,8 +47,9 @@ class Search extends Component {
       [name]: value
     });
   };
-
+  
   render() {
+    let authorStr="a bunch of authors"
     return (
       <Container fluid>
         <Jumbotron>
@@ -56,27 +60,34 @@ class Search extends Component {
           <h3> SEARCH PAGE </h3>
         </Row>
         <Row>
-          <Col size="md-6 sm-12">
-            <SearchForm />
-          </Col>
-          <Col size="md-6 sm-12">
+
+            <SearchForm updateBooks={this.updateBooks} />
+
             {this.state.books.length ? (
               <ListGroup>
                 {this.state.books.map(book => (
+                  // MAKE A STRING OUT OF THE AUTHORS!
+                  
                   <ListGroupItem key={book._id}>
-                    <strong>
-                      {book.title} by {book.authors[0]}
-                    </strong>
-                    <Image src={book.image} />
-                    <p>{book.description}</p>
-                    <Button onClick={() => this.deleteBook(book._id)} />
+                    <BookCard
+                      title={book.title}
+                      authors={authorStr}
+                      image={book.image}
+                      description={book.description}
+                      mainbuttonfunc={()=>{}}
+                      mainbuttontext="view"  
+                      secondbuttonfunc={()=>{}}
+                      secondbuttontext="save"
+                    />
+
+                    {/* <Button onClick={() => this.deleteBook(book._id)} /> */}
                   </ListGroupItem>
                 ))}
               </ListGroup>
             ) : (
               <h3>No Results to Display</h3>
             )}
-          </Col>
+
         </Row>
       </Container>
     );
